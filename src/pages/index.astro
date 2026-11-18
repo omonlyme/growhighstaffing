@@ -8,6 +8,7 @@ import IndustryCard from '../components/IndustryCard.astro';
 import ProcessSteps from '../components/ProcessSteps.astro';
 import JobCard from '../components/JobCard.astro';
 import CTABanner from '../components/CTABanner.astro';
+import ClientMarquee from '../components/ClientMarquee.astro';
 import { services } from '../data/services';
 import { industries } from '../data/industries';
 import { whyChoose } from '../data/process';
@@ -88,6 +89,9 @@ const latestJobs = [...jobs].sort((a, b) => b.posted.localeCompare(a.posted)).sl
       </a>
     </div>
   </section>
+
+  <!-- ───────── Clients ───────── -->
+  <ClientMarquee />
 
   <!-- ───────── Intro ───────── -->
   <section class="section">
