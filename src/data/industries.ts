@@ -22,18 +22,18 @@ export const industries: Industry[] = [
     roles: ['Insurance Advisors', 'Sales Officers', 'Collections', 'Back-office Operations'],
   },
   {
-    slug: 'it-technology',
-    title: 'IT & Technology',
-    icon: 'cpu',
-    summary: 'Technical talent for software, infrastructure and digital teams.',
-    roles: ['Software Developers', 'QA Engineers', 'IT Support', 'Project Coordinators'],
-  },
-  {
     slug: 'nbfc',
     title: 'NBFC',
     icon: 'indian-rupee',
     summary: 'Talent for non-banking financial companies across lending, credit and collections.',
     roles: ['Loan Sales Officers', 'Credit Analysts', 'Collection Executives', 'Branch Managers'],
+  },
+  {
+    slug: 'it-technology',
+    title: 'IT & Technology',
+    icon: 'cpu',
+    summary: 'Technical talent for software, infrastructure and digital teams.',
+    roles: ['Software Developers', 'QA Engineers', 'IT Support', 'Project Coordinators'],
   },
   {
     slug: 'automobile',
