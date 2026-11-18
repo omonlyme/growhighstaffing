@@ -13,7 +13,7 @@ import { industries } from '../data/industries';
 import { whyChoose } from '../data/process';
 import { jobs } from '../data/jobs';
 import { site } from '../config/site';
-import heroImg from '../assets/images/hero-professional.jpg';
+import heroImg from '../assets/images/hero-buildings.jpg';
 import aboutImg from '../assets/images/about-meeting.jpg';
 
 const latestJobs = [...jobs].sort((a, b) => b.posted.localeCompare(a.posted)).slice(0, 3);
@@ -51,7 +51,7 @@ const latestJobs = [...jobs].sort((a, b) => b.posted.localeCompare(a.posted)).sl
 
       <div class="hero-visual hero-anim" style="--d:200ms">
         <div class="hero-photo">
-          <Image src={heroImg} alt="A confident professional in a navy business suit" widths={[480, 720, 960]} sizes="(min-width: 960px) 520px, 90vw" loading="eager" fetchpriority="high" />
+          <Image src={heroImg} alt="Modern glass office buildings against a blue sky" widths={[480, 720, 960]} sizes="(min-width: 960px) 520px, 90vw" loading="eager" fetchpriority="high" />
         </div>
         <div class="float-card float-card--a">
           <span class="float-icon"><Icon name="user-check" size={20} /></span>
