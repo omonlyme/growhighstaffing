@@ -29,11 +29,11 @@ export const industries: Industry[] = [
     roles: ['Software Developers', 'QA Engineers', 'IT Support', 'Project Coordinators'],
   },
   {
-    slug: 'manufacturing',
-    title: 'Manufacturing',
-    icon: 'factory',
-    summary: 'Skilled and semi-skilled workforce for plants and production units.',
-    roles: ['Production Supervisors', 'Quality Inspectors', 'Machine Operators', 'Maintenance Technicians'],
+    slug: 'nbfc',
+    title: 'NBFC',
+    icon: 'indian-rupee',
+    summary: 'Talent for non-banking financial companies across lending, credit and collections.',
+    roles: ['Loan Sales Officers', 'Credit Analysts', 'Collection Executives', 'Branch Managers'],
   },
   {
     slug: 'automobile',
