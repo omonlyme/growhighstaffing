@@ -1,7 +1,7 @@
 # Growhigh Staffing — website
 
 Static website for **growhighstaffing.com**, built with [Astro](https://astro.build) and hosted free on **GitHub Pages**.
-DNS is on **Cloudflare**, email (info@growhighstaffing.com) is on **Zoho Mail Free**, and the forms send to that inbox through **FormSubmit.co** (also free).
+DNS is on **Cloudflare**, email (info@growhighstaffing.com) is on the existing **GoDaddy cPanel** hosting, and the forms send to that inbox through **FormSubmit.co** (free).
 
 ---
 
@@ -47,7 +47,13 @@ npm run preview   # preview the production build
    | A | `@` | `185.199.109.153` |
    | A | `@` | `185.199.110.153` |
    | A | `@` | `185.199.111.153` |
+   | AAAA | `@` | `2606:50c0:8000::153` |
+   | AAAA | `@` | `2606:50c0:8001::153` |
+   | AAAA | `@` | `2606:50c0:8002::153` |
+   | AAAA | `@` | `2606:50c0:8003::153` |
    | CNAME | `www` | `omonlyme.github.io` |
+
+   The complete DNS (website + email) is in `dns/growhighstaffing.com.zone`, ready for **Cloudflare → DNS → Records → Import and Export → Import**. Leave "Proxy imported DNS records" unchecked. `dns/growhighstaffing.com.txt` is an export of the live Cloudflare zone, kept as a backup.
 
 5. **GitHub → Settings → Pages → Custom domain:** enter `growhighstaffing.com` and save. Once the DNS check passes and the certificate is issued (minutes to a few hours), tick **Enforce HTTPS**. `public/CNAME` already contains the domain.
 6. *(Optional)* Once HTTPS works, you can switch the records to **Proxied (orange cloud)** for Cloudflare's CDN. If you do, set **SSL/TLS → Overview → Full**. Do not use "Flexible": it causes redirect loops.
@@ -56,25 +62,32 @@ npm run preview   # preview the production build
 
 ---
 
-## 3. Email: info@growhighstaffing.com on Zoho Mail (Forever Free)
+## 3. Email: info@growhighstaffing.com on GoDaddy cPanel
 
-1. Sign up at **zoho.com/mail → Pricing → Forever Free plan** (up to 5 users, 5 GB each, webmail and mobile app). Add the domain `growhighstaffing.com`.
-2. In **Cloudflare DNS**, add the records Zoho shows you. Copy the values from the Zoho console exactly: hosts differ by region, e.g. `zoho.in` for India and `zoho.com` for the US. All records must be **DNS only**.
+The mailbox and all old mail live on the GoDaddy cPanel hosting plan (server `p3plzcpnl508090.prod.phx3.secureserver.net`, IP `132.148.181.23`). **Keep that plan paid.** If it expires, email stops and the old mail is deleted. cPanel is reached through the GoDaddy account: **My Products → Web Hosting → Manage → cPanel Admin**.
+
+1. **Cloudflare DNS** records for email. `mail` and `webmail` must be **DNS only (grey cloud)**: Cloudflare's proxy only carries web traffic, and proxying them breaks email.
 
    | Type | Name | Content | Priority |
    |---|---|---|---|
-   | TXT | `@` | `zoho-verification=zb……zmverify.zoho.…` (from Zoho) | |
-   | MX | `@` | `mx.zoho.in` (or `.com`) | 10 |
-   | MX | `@` | `mx2.zoho.in` | 20 |
-   | MX | `@` | `mx3.zoho.in` | 50 |
-   | TXT | `@` | `v=spf1 include:zoho.in ~all` (or `include:zohomail.com`, exactly as Zoho shows) | |
-   | TXT | `zmail._domainkey` | DKIM key from **Zoho Admin → Domains → Email Configuration → DKIM** | |
+   | A | `mail` | `132.148.181.23` | |
+   | A | `webmail` | `132.148.181.23` | |
+   | MX | `@` | `mail.growhighstaffing.com` | 0 |
+   | TXT | `@` | `v=spf1 ip4:132.148.181.23 include:secureserver.net -all` | |
    | TXT | `_dmarc` | `v=DMARC1; p=none; rua=mailto:info@growhighstaffing.com` | |
 
-3. Create the user/mailbox **info** in Zoho Admin, then click **Verify** for each record in Zoho.
-4. **Do not enable Cloudflare Email Routing.** It replaces the MX records and would break Zoho.
+2. **Webmail (Roundcube):** <https://p3plzcpnl508090.prod.phx3.secureserver.net:2096>. Sign in with the full email address and its password, then choose Roundcube. Use the server name rather than `webmail.growhighstaffing.com`: its HTTPS certificate covers the server name only.
+3. **Phone / Outlook:** use IMAP (not POP3) so mail stays in sync on every device.
+
+   | | Server | Port | Security |
+   |---|---|---|---|
+   | Incoming (IMAP) | `p3plzcpnl508090.prod.phx3.secureserver.net` | 993 | SSL/TLS |
+   | Outgoing (SMTP) | `p3plzcpnl508090.prod.phx3.secureserver.net` | 465 | SSL/TLS, authentication on |
+
+   The username is the full email address.
+4. **Do not enable Cloudflare Email Routing.** It replaces the MX record and would break delivery.
 5. Keep **only one** SPF (`v=spf1 …`) TXT record on `@`.
-6. Use the Zoho Mail web app (mail.zoho.in / mail.zoho.com) or the Zoho Mail mobile app. The free plan has no IMAP/POP access.
+6. *(To do, optional)* **DKIM** is not set up yet. Mail works without it, but adding it reduces the chance of landing in spam. In cPanel, open **Email Deliverability → growhighstaffing.com → Manage**, then copy the `default._domainkey` TXT record into Cloudflare. After that, DMARC can be tightened to `p=quarantine`.
 
 ---
 
@@ -82,7 +95,7 @@ npm run preview   # preview the production build
 
 All forms (contact, employer enquiry, callback, job application with resume upload) post to `formEndpoint` in `src/config/site.ts`. The default is `https://formsubmit.co/info@growhighstaffing.com`.
 
-1. **After** the Zoho mailbox works, submit any form on the live site once.
+1. Submit any form on the live site once.
 2. FormSubmit emails an **activation link** to info@growhighstaffing.com. Click it. Until you do, submissions are not delivered.
 3. *(Recommended)* The activation email also gives you a random alias string. Replace the endpoint with `https://formsubmit.co/<that-alias>` so your email address isn't visible in the page source.
 4. Spam protection uses a hidden honeypot field. If spam becomes a problem, change `_captcha` to `"true"` in `src/components/forms/FormShell.astro`.
