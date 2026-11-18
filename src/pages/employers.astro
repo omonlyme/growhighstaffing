@@ -1,0 +1,257 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Icon from '../components/Icon.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import EmployerEnquiryForm from '../components/forms/EmployerEnquiryForm.astro';
+import CallbackForm from '../components/forms/CallbackForm.astro';
+import { services } from '../data/services';
+import { site, whatsappLink } from '../config/site';
+import heroImg from '../assets/images/employers-partnership.jpg';
+import teamImg from '../assets/images/team-collaboration.jpg';
+
+const wa = whatsappLink('Hello Growhigh Staffing, I would like to discuss a hiring requirement.');
+const benefits = [
+  { icon: 'clock', title: 'Save hiring time', text: 'We handle sourcing and screening so your team only meets relevant candidates.' },
+  { icon: 'target', title: 'Better-fit hires', text: 'Profiles are matched on skills, experience and culture — not keywords alone.' },
+  { icon: 'layers', title: 'Scale with flexibility', text: 'Move between permanent, contract and bulk hiring as your needs change.' },
+  { icon: 'user-check', title: 'One point of contact', text: 'A dedicated recruiter who understands your business and keeps you updated.' },
+];
+---
+
+<BaseLayout
+  title="For Employers — Hire Talent"
+  description={`Hire skilled professionals with ${site.name}. Permanent, contract and bulk staffing, executive search and workforce solutions. Submit a hiring enquiry or request a callback.`}
+>
+  <PageHero
+    eyebrow="For Employers"
+    title="Build your team with <span class='text-gradient'>confidence</span>"
+    intro="Tell us who you need. We’ll find, screen and present qualified candidates — so you can focus on choosing the best person for the job."
+    image={heroImg}
+    crumbs={[{ label: 'For Employers' }]}
+  >
+    <div class="btn-row hero-actions">
+      <a href="#enquiry" class="btn btn--primary">Submit a Hiring Enquiry <Icon name="arrow-right" size={18} class="icon-arrow" /></a>
+      <a href="#callback" class="btn btn--ghost-light"><Icon name="phone" size={18} /> Request a Callback</a>
+    </div>
+  </PageHero>
+
+  <!-- Hiring solutions -->
+  <section class="section">
+    <div class="container split split--wide-left">
+      <div class="reveal">
+        <span class="eyebrow">Our Hiring Solutions</span>
+        <h2 class="mt">Recruitment support that fits the way you hire</h2>
+        <p class="lead mt-sm">
+          Every business hires differently. We adapt our approach to your timelines, volumes and the level of the roles
+          you need to fill.
+        </p>
+        <ul class="solution-list mt">
+          {
+            services.map((s) => (
+              <li>
+                <a href={`/services/#${s.slug}`}>
+                  <span class="sol-icon"><Icon name={s.icon} size={20} /></span>
+                  <span>
+                    <strong>{s.title}</strong>
+                    <small>{s.summary}</small>
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="media-frame reveal" style="--delay:120ms">
+        <div class="media" style="aspect-ratio: 4/5">
+          <Image src={teamImg} alt="A team working together at laptops" widths={[480, 800]} sizes="(min-width: 960px) 440px, 90vw" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits -->
+  <section class="section section--tint">
+    <div class="container">
+      <SectionHeading eyebrow="Why Partner With Us" title="What you can expect" />
+      <div class="grid grid-4">
+        {
+          benefits.map((b, i) => (
+            <div class="card card--hover reveal" style={`--delay:${i * 80}ms`}>
+              <div class="icon-badge">
+                <Icon name={b.icon} size={24} />
+              </div>
+              <h3>{b.title}</h3>
+              <p>{b.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="section section--dark process-dark">
+    <div class="container">
+      <SectionHeading eyebrow="How We Work With You" title="From requirement to onboarding" intro="A clear, collaborative process with regular updates at every stage." />
+      <ProcessSteps dark />
+    </div>
+  </section>
+
+  <!-- Enquiry -->
+  <section class="section section--blue" id="enquiry">
+    <div class="container enquiry-grid">
+      <div class="form-card reveal">
+        <span class="eyebrow">Hiring Enquiry</span>
+        <h2 class="form-title">Tell us about your requirement</h2>
+        <p>Fill in the details below and our team will contact you to discuss next steps.</p>
+        <EmployerEnquiryForm />
+      </div>
+
+      <aside class="enquiry-side">
+        <div class="form-card callback-card reveal" id="callback" style="--delay:100ms">
+          <span class="icon-badge icon-badge--orange"><Icon name="phone" size={24} /></span>
+          <h2 class="form-title form-title--sm">Request a callback</h2>
+          <p>Prefer to talk? Leave your number and we’ll call you back.</p>
+          <CallbackForm />
+        </div>
+
+        <div class="direct reveal" style="--delay:160ms">
+          <h3>Or reach us directly</h3>
+          <a href={`mailto:${site.email}`}><Icon name="mail" size={18} /> {site.email}</a>
+          {site.phone && <a href={`tel:${site.phoneHref}`}><Icon name="phone" size={18} /> {site.phone}</a>}
+          {
+            wa && (
+              <a href={wa} target="_blank" rel="noopener">
+                <Icon name="brand:whatsapp" size={18} /> Chat on WhatsApp
+              </a>
+            )
+          }
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // Pre-select a service when arriving from /services/ (?service=...)
+  const svc = new URLSearchParams(location.search).get('service');
+  const sel = document.querySelector<HTMLSelectElement>('select[name="Service required"]');
+  if (svc && sel && [...sel.options].some((o) => o.value === svc)) sel.value = svc;
+</script>
+
+<style>
+  .hero-actions {
+    margin-top: 2rem;
+  }
+  .solution-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .solution-list a {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius);
+    color: inherit;
+    transition:
+      background 0.25s,
+      transform 0.25s var(--ease);
+  }
+  .solution-list a:hover {
+    background: var(--slate-50);
+    transform: translateX(4px);
+  }
+  .sol-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: var(--blue-50);
+    color: var(--blue-600);
+  }
+  .solution-list strong {
+    display: block;
+    font-family: var(--font-display);
+    color: var(--ink);
+  }
+  .solution-list small {
+    font-size: var(--fs-xs);
+    color: var(--slate-500);
+  }
+  .process-dark {
+    background:
+      radial-gradient(700px 400px at 0% 0%, rgb(27 108 168 / 0.35), transparent 70%),
+      var(--navy-900);
+  }
+  .enquiry-grid {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+  }
+  @media (min-width: 1024px) {
+    .enquiry-grid {
+      grid-template-columns: 1.55fr 1fr;
+    }
+    .enquiry-side {
+      position: sticky;
+      top: calc(var(--header-h) + 1.5rem);
+    }
+  }
+  .form-title {
+    font-size: var(--fs-2xl);
+    margin-top: 0.75rem;
+  }
+  .form-title--sm {
+    font-size: var(--fs-xl);
+    margin-top: 0;
+  }
+  .enquiry-side {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .callback-card {
+    box-shadow: var(--shadow);
+  }
+  .callback-card .icon-badge {
+    margin-bottom: 1rem;
+  }
+  #callback {
+    scroll-margin-top: calc(var(--header-h) + 24px);
+  }
+  .direct {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1.75rem;
+    border-radius: var(--radius-lg);
+    background: var(--navy-900);
+    color: rgb(255 255 255 / 0.8);
+    font-size: var(--fs-sm);
+  }
+  .direct h3 {
+    color: var(--white);
+    font-size: 1.05rem;
+    margin-bottom: 0.25rem;
+  }
+  .direct a {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: rgb(255 255 255 / 0.85);
+    word-break: break-word;
+  }
+  .direct a:hover {
+    color: var(--orange-500);
+  }
+  .direct :global(.icon) {
+    color: var(--orange-500);
+    flex-shrink: 0;
+  }
+</style>

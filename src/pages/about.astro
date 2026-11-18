@@ -1,0 +1,178 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Icon from '../components/Icon.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import CTABanner from '../components/CTABanner.astro';
+import { site } from '../config/site';
+import heroImg from '../assets/images/office.jpg';
+import teamImg from '../assets/images/team-collaboration.jpg';
+import meetingImg from '../assets/images/about-meeting.jpg';
+
+const values = [
+  { icon: 'shield-check', title: 'Integrity', text: 'We are honest with clients and candidates, and we keep every commitment we make.' },
+  { icon: 'target', title: 'Quality', text: 'We focus on the right match, not the fastest CV — quality guides every shortlist.' },
+  { icon: 'heart', title: 'Respect for People', text: 'Every candidate is treated with dignity, transparency and timely communication.' },
+  { icon: 'handshake', title: 'Partnership', text: 'We work as an extension of your team, invested in your long-term success.' },
+  { icon: 'zap', title: 'Responsiveness', text: 'Hiring moves fast. We stay accessible, proactive and quick to act.' },
+  { icon: 'eye', title: 'Transparency', text: 'Clear processes, honest feedback and no hidden steps along the way.' },
+];
+---
+
+<BaseLayout
+  title="About Us"
+  description={`Learn about ${site.name} — a recruitment and staffing company connecting the right talent with the right opportunities. Our mission, vision, values and approach.`}
+>
+  <PageHero
+    eyebrow="About Us"
+    title="Growing careers. <span class='text-gradient'>Building businesses.</span>"
+    intro={`${site.name} is a recruitment and staffing solutions company dedicated to connecting skilled professionals with organisations that need them.`}
+    image={heroImg}
+    crumbs={[{ label: 'About Us' }]}
+  />
+
+  <!-- Overview -->
+  <section class="section">
+    <div class="container split split--wide-left">
+      <div class="reveal">
+        <span class="eyebrow">Company Overview</span>
+        <h2 class="mt">Connecting the right talent with the right opportunities</h2>
+        <p class="lead mt-sm">
+          {site.name} is a professional recruitment and staffing solutions company. We help businesses find skilled,
+          qualified and experienced professionals while helping candidates discover rewarding career opportunities.
+        </p>
+        <p class="mt-sm">
+          We work with organisations of different sizes and across multiple industries — supporting everything from
+          individual specialist hires to high-volume recruitment and leadership search. Our goal is simple: to make
+          hiring easier through reliable recruitment services, quality talent acquisition and efficient workforce
+          solutions.
+        </p>
+        <p class="mt-sm">
+          For candidates, we aim to be a trusted career partner — listening to their goals, presenting opportunities
+          honestly and supporting them through every stage of the hiring process.
+        </p>
+      </div>
+      <div class="media-frame reveal" style="--delay:120ms">
+        <div class="media" style="aspect-ratio: 4/5">
+          <Image src={teamImg} alt="Professionals collaborating around a table with laptops" widths={[480, 800]} sizes="(min-width: 960px) 460px, 90vw" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission / Vision -->
+  <section class="section section--tint">
+    <div class="container grid grid-2">
+      <article class="mv-card reveal">
+        <span class="icon-badge"><Icon name="flag" size={26} /></span>
+        <span class="eyebrow">Our Mission</span>
+        <h2>Simplify hiring and create meaningful matches</h2>
+        <p>
+          To deliver dependable, people-focused recruitment solutions that help businesses build capable teams and help
+          professionals find roles where they can grow and succeed.
+        </p>
+      </article>
+      <article class="mv-card mv-card--dark reveal" style="--delay:100ms">
+        <span class="icon-badge icon-badge--orange"><Icon name="eye" size={26} /></span>
+        <span class="eyebrow">Our Vision</span>
+        <h2>A trusted, growth-oriented recruitment partner</h2>
+        <p>
+          To be recognised as a recruitment partner that businesses rely on and candidates recommend — known for quality,
+          integrity and a genuine commitment to growth on both sides of every hire.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow="Our Values" title="The principles behind every placement" intro="Our values shape how we work with clients, how we treat candidates and how we measure success." />
+      <div class="grid grid-3">
+        {
+          values.map((v, i) => (
+            <div class="card card--hover reveal" style={`--delay:${(i % 3) * 80}ms`}>
+              <div class="icon-badge">
+                <Icon name={v.icon} size={24} />
+              </div>
+              <h3>{v.title}</h3>
+              <p>{v.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Approach -->
+  <section class="section section--blue">
+    <div class="container split">
+      <div class="media-frame media-frame--left reveal">
+        <div class="media" style="aspect-ratio: 5/4">
+          <Image src={meetingImg} alt="A recruitment briefing in a meeting room" widths={[480, 800, 1100]} sizes="(min-width: 960px) 560px, 90vw" />
+        </div>
+      </div>
+      <div class="reveal" style="--delay:120ms">
+        <span class="eyebrow">Our Approach</span>
+        <h2 class="mt">Recruitment built on understanding</h2>
+        <p class="lead mt-sm">
+          Great hiring starts with listening. Before we search, we take the time to understand your business, your team
+          and what success looks like in the role.
+        </p>
+        <ul class="check-list mt">
+          <li><Icon name="check" size={18} /> <span><strong>Requirement clarity</strong> — we define the role, skills and culture fit together.</span></li>
+          <li><Icon name="check" size={18} /> <span><strong>Targeted sourcing</strong> — we reach active and passive talent through multiple channels.</span></li>
+          <li><Icon name="check" size={18} /> <span><strong>Careful screening</strong> — every profile is assessed before it reaches you.</span></li>
+          <li><Icon name="check" size={18} /> <span><strong>Ongoing support</strong> — we stay involved through offer, joining and beyond.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow="How We Work" title="Our recruitment process" />
+      <ProcessSteps />
+    </div>
+  </section>
+
+  <CTABanner />
+</BaseLayout>
+
+<style>
+  .mv-card {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(2rem, 4vw, 3rem);
+    border-radius: var(--radius-xl);
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+  }
+  .mv-card h2 {
+    font-size: var(--fs-2xl);
+    margin: 0.75rem 0 1rem;
+  }
+  .mv-card p {
+    color: var(--slate-600);
+  }
+  .mv-card--dark {
+    background:
+      radial-gradient(400px 260px at 100% 0%, rgb(42 133 199 / 0.45), transparent 70%),
+      linear-gradient(140deg, var(--navy-950), var(--navy-800));
+    border: 0;
+  }
+  .mv-card--dark h2 {
+    color: var(--white);
+  }
+  .mv-card--dark p {
+    color: rgb(255 255 255 / 0.75);
+  }
+  .mv-card--dark .eyebrow {
+    color: var(--orange-500);
+  }
+  .check-list strong {
+    color: var(--ink);
+  }
+</style>

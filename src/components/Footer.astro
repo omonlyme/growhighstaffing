@@ -1,0 +1,226 @@
+---
+import Icon from './Icon.astro';
+import { site, fullAddress, whatsappLink } from '../config/site';
+import { services } from '../data/services';
+
+const year = new Date().getFullYear();
+const socials = [
+  { key: 'linkedin', label: 'LinkedIn', url: site.social.linkedin, icon: 'brand:linkedin' },
+  { key: 'facebook', label: 'Facebook', url: site.social.facebook, icon: 'brand:facebook' },
+  { key: 'instagram', label: 'Instagram', url: site.social.instagram, icon: 'instagram' },
+  { key: 'x', label: 'X (Twitter)', url: site.social.x, icon: 'brand:x' },
+].filter((s) => s.url);
+const wa = whatsappLink();
+---
+
+<footer class="site-footer">
+  <div class="diamond" style="--d:420px; right:-120px; top:-160px"></div>
+  <div class="diamond" style="--d:220px; left:-80px; bottom:40px"></div>
+
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <img src="/images/logo-white.png" alt={site.name} width="604" height="330" />
+      <p class="footer-tagline">{site.tagline}</p>
+      <p>
+        A recruitment and staffing partner connecting businesses with skilled professionals, and helping candidates find
+        rewarding careers.
+      </p>
+      {
+        socials.length > 0 && (
+          <div class="socials">
+            {socials.map((s) => (
+              <a href={s.url} target="_blank" rel="noopener" aria-label={`${site.name} on ${s.label}`}>
+                <Icon name={s.icon} size={18} />
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </div>
+
+    <div>
+      <h2 class="footer-title">Company</h2>
+      <ul class="footer-links">
+        <li><a href="/about/">About Us</a></li>
+        <li><a href="/services/">Our Services</a></li>
+        <li><a href="/industries/">Industries</a></li>
+        <li><a href="/contact/">Contact Us</a></li>
+      </ul>
+      <h2 class="footer-title footer-title--spaced">Get Started</h2>
+      <ul class="footer-links">
+        <li><a href="/employers/">For Employers</a></li>
+        <li><a href="/candidates/">For Candidates</a></li>
+        <li><a href="/candidates/#jobs">Current Openings</a></li>
+        <li><a href="/candidates/#apply">Submit Resume</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="footer-title">Services</h2>
+      <ul class="footer-links">
+        {services.map((s) => <li><a href={`/services/#${s.slug}`}>{s.title}</a></li>)}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="footer-title">Get in Touch</h2>
+      <ul class="footer-contact">
+        <li>
+          <Icon name="mail" size={18} />
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+        </li>
+        {
+          site.phone && (
+            <li>
+              <Icon name="phone" size={18} />
+              <a href={`tel:${site.phoneHref}`}>{site.phone}</a>
+            </li>
+          )
+        }
+        {
+          wa && (
+            <li>
+              <Icon name="brand:whatsapp" size={18} />
+              <a href={wa} target="_blank" rel="noopener">
+                Chat on WhatsApp
+              </a>
+            </li>
+          )
+        }
+        {
+          fullAddress() && (
+            <li>
+              <Icon name="map-pin" size={18} />
+              <address>{fullAddress()}</address>
+            </li>
+          )
+        }
+        {
+          site.hours && (
+            <li>
+              <Icon name="clock" size={18} />
+              <span>{site.hours}</span>
+            </li>
+          )
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© {year} {site.legalName}. All rights reserved.</p>
+      <p>{site.tagline}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(900px 400px at 85% -10%, rgb(27 108 168 / 0.35), transparent 60%),
+      linear-gradient(180deg, var(--navy-900), var(--navy-950));
+    color: rgb(255 255 255 / 0.68);
+    padding-top: clamp(4rem, 7vw, 6rem);
+    font-size: var(--fs-sm);
+  }
+  .footer-grid {
+    position: relative;
+    display: grid;
+    gap: 2.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    padding-bottom: 3.5rem;
+  }
+  @media (min-width: 1024px) {
+    .footer-grid {
+      grid-template-columns: 1.5fr 1fr 1fr 1.3fr;
+    }
+  }
+  .footer-brand img {
+    width: 170px;
+    margin-bottom: 1.25rem;
+  }
+  .footer-tagline {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--white);
+    font-size: var(--fs-base);
+    margin-bottom: 0.6rem;
+  }
+  .footer-title {
+    font-size: var(--fs-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 1.1rem;
+  }
+  .footer-title--spaced {
+    margin-top: 2rem;
+  }
+  .footer-links,
+  .footer-contact {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.7rem;
+  }
+  .site-footer a {
+    color: rgb(255 255 255 / 0.72);
+    transition: color 0.2s;
+  }
+  .site-footer a:hover {
+    color: var(--orange-500);
+  }
+  .footer-contact li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  .footer-contact :global(.icon) {
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+    color: var(--orange-500);
+  }
+  .footer-contact a {
+    word-break: break-word;
+  }
+  address {
+    font-style: normal;
+  }
+  .socials {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+  }
+  .socials a {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: rgb(255 255 255 / 0.07);
+    border: 1px solid rgb(255 255 255 / 0.1);
+    color: var(--white);
+    transition:
+      background 0.25s,
+      transform 0.25s var(--ease);
+  }
+  .socials a:hover {
+    background: var(--orange-500);
+    color: var(--navy-950);
+    transform: translateY(-3px);
+  }
+  .footer-bottom {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid rgb(255 255 255 / 0.1);
+    font-size: var(--fs-xs);
+    color: rgb(255 255 255 / 0.5);
+  }
+</style>

@@ -1,0 +1,94 @@
+---
+import FormShell from './FormShell.astro';
+import Field from './Field.astro';
+import Icon from '../Icon.astro';
+import { site } from '../../config/site';
+import { jobs } from '../../data/jobs';
+import { industries } from '../../data/industries';
+
+const roleOptions = [
+  ...jobs.map((j) => ({ value: `${j.title} — ${j.location}`, label: `${j.title} — ${j.location}`, id: j.id })),
+  { value: 'General application', label: 'General application (no specific role)', id: 'general' },
+];
+---
+
+<FormShell
+  formName="Job Application"
+  subject={`New job application — ${site.name} website`}
+  submitLabel="Submit Application"
+  multipart
+  id="application-form"
+  autoresponse={`Thank you for applying through ${site.name}. We have received your resume and our recruitment team will be in touch if your profile matches a suitable opportunity.`}
+>
+  <div class="form-row">
+    <Field name="Name" label="Full name" required autocomplete="name" placeholder="Your full name" />
+    <Field name="email" label="Email address" type="email" required autocomplete="email" placeholder="you@example.com" />
+  </div>
+  <div class="form-row">
+    <Field name="Phone" label="Phone number" type="tel" required autocomplete="tel" inputmode="tel" placeholder="+91 98765 43210" />
+    <Field name="Current location" label="Current location" required autocomplete="address-level2" placeholder="City" />
+  </div>
+  <div class="form-row">
+    <Field name="Position" id="apply-role" label="Position applying for" required options={roleOptions} placeholder="Select a position" />
+    <Field name="Preferred industry" label="Preferred industry" options={[...industries.map((i) => i.title), 'Other']} placeholder="Select industry" />
+  </div>
+  <div class="form-row">
+    <Field name="Experience" label="Total experience" required options={['Fresher', 'Less than 1 year', '1–3 years', '3–5 years', '5–10 years', '10+ years']} placeholder="Select experience" />
+    <Field name="Notice period" label="Notice period" options={['Immediate', '15 days', '30 days', '60 days', '90 days']} placeholder="Select notice period" />
+  </div>
+  <div class="form-row">
+    <Field name="Current designation" label="Current / last designation" autocomplete="organization-title" placeholder="e.g. Sales Executive" />
+    <Field name="LinkedIn" label="LinkedIn profile" type="url" inputmode="url" placeholder="https://linkedin.com/in/…" />
+  </div>
+
+  <div class="field">
+    <span class="label" id="resume-label">Upload resume <span class="req" aria-hidden="true">*</span></span>
+    <label class="file-drop" data-file-drop>
+      <span class="icon-badge"><Icon name="upload" size={22} /></span>
+      <span>
+        <strong data-file-name>Choose a file or drag it here</strong>
+        <span>PDF, DOC or DOCX · max {site.maxResumeMB} MB</span>
+      </span>
+      <input
+        type="file"
+        name="attachment"
+        accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        required
+        aria-labelledby="resume-label"
+        data-max-mb={site.maxResumeMB}
+      />
+    </label>
+  </div>
+
+  <Field name="Cover note" label="Short cover note" textarea rows={4} placeholder="Briefly tell us about yourself and the kind of role you are looking for." />
+</FormShell>
+
+<script>
+  // Show chosen file name + drag state
+  document.querySelectorAll<HTMLLabelElement>('[data-file-drop]').forEach((drop) => {
+    const input = drop.querySelector<HTMLInputElement>('input[type="file"]')!;
+    const name = drop.querySelector<HTMLElement>('[data-file-name]')!;
+    const original = name.textContent;
+    input.addEventListener('change', () => {
+      input.setCustomValidity('');
+      name.textContent = input.files?.[0]?.name ?? original;
+    });
+    ['dragenter', 'dragover'].forEach((t) => drop.addEventListener(t, () => drop.classList.add('is-dragover')));
+    ['dragleave', 'drop'].forEach((t) => drop.addEventListener(t, () => drop.classList.remove('is-dragover')));
+  });
+
+  // Pre-select role from ?role=<job-id> (set by "Apply Now" buttons)
+  const select = document.querySelector<HTMLSelectElement>('#apply-role');
+  const setRole = (id: string | null) => {
+    if (!select || !id) return;
+    const opt = [...select.options].find((o) => o.dataset.id === id);
+    if (opt) select.value = opt.value;
+  };
+  setRole(new URLSearchParams(location.search).get('role'));
+  document.querySelectorAll<HTMLAnchorElement>('[data-apply]').forEach((a) =>
+    a.addEventListener('click', () => {
+      setRole(a.dataset.apply ?? null);
+      history.replaceState(null, '', `?role=${encodeURIComponent(a.dataset.apply ?? '')}#apply`);
+    }),
+  );
+</script>

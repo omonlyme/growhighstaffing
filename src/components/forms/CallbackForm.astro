@@ -1,0 +1,19 @@
+---
+import FormShell from './FormShell.astro';
+import Field from './Field.astro';
+import { site } from '../../config/site';
+---
+
+<FormShell
+  formName="Callback Request"
+  subject={`Callback request — ${site.name} website`}
+  submitLabel="Request a Callback"
+  autoresponse={`Thank you for requesting a callback from ${site.name}. A member of our team will call you at your preferred time.`}
+  compact
+>
+  <Field name="Name" label="Your name" required autocomplete="name" placeholder="Full name" />
+  <Field name="Phone" label="Phone number" type="tel" required autocomplete="tel" inputmode="tel" placeholder="+91 98765 43210" />
+  <Field name="email" label="Email address" type="email" required autocomplete="email" placeholder="you@company.com" />
+  <Field name="Company" label="Company" autocomplete="organization" placeholder="Company name" />
+  <Field name="Preferred time" label="Preferred time to call" options={['Morning (10 AM – 1 PM)', 'Afternoon (1 PM – 4 PM)', 'Evening (4 PM – 7 PM)', 'Any time']} placeholder="Select a time" />
+</FormShell>

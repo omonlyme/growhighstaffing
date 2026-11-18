@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<BaseLayout title="Page Not Found" noindex>
+  <section class="status-page">
+    <div class="container status-inner">
+      <div class="status-code">404</div>
+      <h1>Page not found</h1>
+      <p class="lead">Sorry, the page you’re looking for doesn’t exist or has been moved.</p>
+      <div class="btn-row">
+        <a href="/" class="btn btn--navy">Back to Home <Icon name="arrow-right" size={18} class="icon-arrow" /></a>
+        <a href="/contact/" class="btn btn--outline">Contact Us</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,92 @@
+---
+import Icon from './Icon.astro';
+import { whatsappLink } from '../config/site';
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  text?: string;
+}
+const {
+  eyebrow = 'Let’s work together',
+  title = 'Ready to build a stronger team?',
+  text = 'Tell us about your hiring needs and our recruitment team will get back to you to discuss how we can help.',
+} = Astro.props;
+const wa = whatsappLink();
+---
+
+<section class="section cta-section">
+  <div class="container">
+    <div class="cta reveal">
+      <div class="diamond" style="--d:340px; right:-60px; top:-120px"></div>
+      <div class="diamond" style="--d:160px; right:240px; bottom:-100px; border-color: rgb(243 146 0 / 0.35)"></div>
+      <div class="cta-content">
+        <span class="eyebrow">{eyebrow}</span>
+        <h2>{title}</h2>
+        <p>{text}</p>
+      </div>
+      <div class="cta-actions">
+        <a href="/employers/#enquiry" class="btn btn--primary">
+          Send a Hiring Enquiry <Icon name="arrow-right" size={18} class="icon-arrow" />
+        </a>
+        {
+          wa && (
+            <a href={wa} class="btn btn--ghost-light" target="_blank" rel="noopener">
+              <Icon name="brand:whatsapp" size={18} /> WhatsApp Us
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-section {
+    padding-top: 0;
+  }
+  .cta {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+    padding: clamp(2.25rem, 6vw, 4.5rem);
+    border-radius: var(--radius-xl);
+    background:
+      radial-gradient(600px 300px at 100% 0%, rgb(42 133 199 / 0.5), transparent 70%),
+      linear-gradient(120deg, var(--navy-950), var(--navy-800));
+    color: rgb(255 255 255 / 0.78);
+    box-shadow: var(--shadow-lg);
+  }
+  @media (min-width: 960px) {
+    .cta {
+      grid-template-columns: 1.4fr auto;
+    }
+  }
+  .cta .eyebrow {
+    color: var(--orange-500);
+  }
+  .cta h2 {
+    color: var(--white);
+    margin: 0.75rem 0 1rem;
+  }
+  .cta p {
+    max-width: 560px;
+  }
+  .cta-content,
+  .cta-actions {
+    position: relative;
+  }
+  .cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+  }
+  @media (min-width: 960px) {
+    .cta-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+</style>

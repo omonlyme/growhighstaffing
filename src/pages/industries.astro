@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import IndustryCard from '../components/IndustryCard.astro';
+import Icon from '../components/Icon.astro';
+import CTABanner from '../components/CTABanner.astro';
+import { industries } from '../data/industries';
+import heroImg from '../assets/images/about-meeting.jpg';
+---
+
+<BaseLayout
+  title="Industries We Serve"
+  description="Recruitment for Banking & Finance, BFSI, IT & Technology, Manufacturing, Automobile, Retail, Sales & Marketing and Healthcare."
+>
+  <PageHero
+    eyebrow="Industries We Serve"
+    title="Specialist hiring across <span class='text-gradient'>key sectors</span>"
+    intro="Every industry has its own skills, pace and expectations. We bring sector understanding to every requirement so you meet candidates who are ready to contribute."
+    image={heroImg}
+    crumbs={[{ label: 'Industries' }]}
+  />
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Our Sectors"
+        title="Where we recruit"
+        intro="Below are the industries we focus on, with examples of the roles we commonly help fill."
+      />
+      <div class="grid grid-4">
+        {industries.map((ind, i) => <IndustryCard industry={ind} delay={(i % 4) * 80} detailed />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container split">
+      <div class="reveal">
+        <span class="eyebrow">Sector-Focused Recruitment</span>
+        <h2 class="mt">Why industry knowledge matters</h2>
+        <p class="lead mt-sm">
+          Understanding an industry means asking the right questions, evaluating the right skills and presenting
+          candidates who can adapt quickly.
+        </p>
+      </div>
+      <ul class="feature-grid">
+        <li class="reveal">
+          <Icon name="target" size={22} />
+          <div><strong>Relevant screening</strong><span>Assessment criteria tailored to sector-specific skills and certifications.</span></div>
+        </li>
+        <li class="reveal" style="--delay:80ms">
+          <Icon name="users" size={22} />
+          <div><strong>Wider reach</strong><span>Access to candidates with relevant industry experience and networks.</span></div>
+        </li>
+        <li class="reveal" style="--delay:160ms">
+          <Icon name="clock" size={22} />
+          <div><strong>Faster turnaround</strong><span>Familiarity with the roles shortens the time to a quality shortlist.</span></div>
+        </li>
+        <li class="reveal" style="--delay:240ms">
+          <Icon name="handshake" size={22} />
+          <div><strong>Better retention</strong><span>Candidates who understand the sector settle in and stay longer.</span></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <CTABanner title="Hiring in one of these sectors?" text="Share your requirements and we’ll connect you with candidates who understand your industry." />
+</BaseLayout>
+
+<style>
+  .feature-grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 640px) {
+    .feature-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .feature-grid li {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+  }
+  .feature-grid :global(.icon) {
+    flex-shrink: 0;
+    color: var(--orange-500);
+    margin-top: 0.15rem;
+  }
+  .feature-grid strong {
+    display: block;
+    color: var(--ink);
+    font-family: var(--font-display);
+    margin-bottom: 0.25rem;
+  }
+  .feature-grid span {
+    font-size: var(--fs-sm);
+    color: var(--slate-600);
+  }
+</style>

@@ -1,0 +1,119 @@
+---
+import Icon from './Icon.astro';
+import { process } from '../data/process';
+interface Props {
+  dark?: boolean;
+}
+const { dark = false } = Astro.props;
+---
+
+<ol class:list={['steps', { 'steps--dark': dark }]}>
+  {
+    process.map((step, i) => (
+      <li class="step reveal" style={`--delay:${i * 90}ms`}>
+        <div class="step-marker">
+          <Icon name={step.icon} size={24} />
+          <span class="step-num">{String(i + 1).padStart(2, '0')}</span>
+        </div>
+        <h3>{step.title}</h3>
+        <p>{step.text}</p>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .steps {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 2rem;
+    counter-reset: step;
+    position: relative;
+  }
+  @media (min-width: 720px) {
+    .steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1080px) {
+    .steps {
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1.5rem;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 34px;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: repeating-linear-gradient(90deg, var(--slate-300) 0 8px, transparent 8px 16px);
+    }
+    .steps--dark::before {
+      background: repeating-linear-gradient(90deg, rgb(255 255 255 / 0.2) 0 8px, transparent 8px 16px);
+    }
+    .step {
+      text-align: center;
+    }
+    .step-marker {
+      margin-inline: auto;
+    }
+  }
+  .step {
+    position: relative;
+  }
+  .step-marker {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 68px;
+    height: 68px;
+    border-radius: 22px;
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    color: var(--blue-600);
+    box-shadow: var(--shadow);
+    margin-bottom: 1.25rem;
+    transform: rotate(45deg);
+    transition: transform 0.4s var(--ease);
+  }
+  .step-marker > :global(.icon) {
+    transform: rotate(-45deg);
+  }
+  .step:hover .step-marker {
+    transform: rotate(45deg) scale(1.08);
+  }
+  .steps--dark .step-marker {
+    background: var(--navy-800);
+    border-color: rgb(255 255 255 / 0.12);
+    color: var(--white);
+  }
+  .step-num {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    transform: rotate(-45deg);
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--orange-500);
+    color: var(--navy-950);
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 800;
+  }
+  h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  p {
+    font-size: var(--fs-sm);
+    color: var(--slate-600);
+  }
+  .steps--dark p {
+    color: rgb(255 255 255 / 0.7);
+  }
+</style>

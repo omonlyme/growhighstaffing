@@ -1,0 +1,46 @@
+---
+import Icon from './Icon.astro';
+import type { Service } from '../data/services';
+interface Props {
+  service: Service;
+  delay?: number;
+}
+const { service, delay = 0 } = Astro.props;
+---
+
+<a href={`/services/#${service.slug}`} class="card card--hover service-card reveal" style={`--delay:${delay}ms`}>
+  <div class="icon-badge"><Icon name={service.icon} size={26} /></div>
+  <h3>{service.title}</h3>
+  <p>{service.summary}</p>
+  <span class="link-arrow">Learn more <Icon name="arrow-right" size={16} /></span>
+</a>
+
+<style>
+  .service-card {
+    display: flex;
+    flex-direction: column;
+    color: inherit;
+  }
+  .service-card p {
+    flex: 1;
+    margin-bottom: 1.25rem;
+  }
+  .service-card::after {
+    content: '';
+    position: absolute;
+    left: 2rem;
+    right: 2rem;
+    bottom: 0;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    background: linear-gradient(90deg, var(--orange-500), #ffbe5c);
+    transform: scaleX(0);
+    transition: transform 0.4s var(--ease);
+  }
+  .service-card:hover::after {
+    transform: scaleX(1);
+  }
+  .service-card:hover {
+    color: inherit;
+  }
+</style>

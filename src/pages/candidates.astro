@@ -1,0 +1,312 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Icon from '../components/Icon.astro';
+import JobCard from '../components/JobCard.astro';
+import JobApplicationForm from '../components/forms/JobApplicationForm.astro';
+import { jobs } from '../data/jobs';
+import { site, whatsappLink } from '../config/site';
+import heroImg from '../assets/images/candidates-professional.jpg';
+
+const sortedJobs = [...jobs].sort((a, b) => b.posted.localeCompare(a.posted));
+const jobIndustries = [...new Set(sortedJobs.map((j) => j.industry))];
+const wa = whatsappLink('Hello Growhigh Staffing, I am looking for job opportunities.');
+
+const perks = [
+  { icon: 'search', title: 'Relevant opportunities', text: 'We match you with roles that suit your skills, experience and goals.' },
+  { icon: 'message-circle', title: 'Honest guidance', text: 'Clear information about each role, plus interview preparation support.' },
+  { icon: 'layers', title: 'One profile, many roles', text: 'Your resume is considered for suitable current and future openings.' },
+  { icon: 'clock', title: 'Timely updates', text: 'We keep you informed at every stage of the process.' },
+];
+---
+
+<BaseLayout
+  title="For Candidates — Jobs & Careers"
+  description={`Explore job openings and submit your resume to ${site.name}. Opportunities across banking, IT, manufacturing, retail, healthcare, sales and more.`}
+>
+  <PageHero
+    eyebrow="For Candidates"
+    title="Find a role where you can <span class='text-gradient'>grow</span>"
+    intro="Explore current openings, apply in minutes, or share your resume so we can match you with the right opportunity as soon as it opens."
+    image={heroImg}
+    crumbs={[{ label: 'For Candidates' }]}
+  >
+    <div class="btn-row hero-actions">
+      <a href="#jobs" class="btn btn--primary">Browse Jobs <Icon name="arrow-right" size={18} class="icon-arrow" /></a>
+      <a href="#apply" class="btn btn--ghost-light"><Icon name="upload" size={18} /> Submit Resume</a>
+    </div>
+  </PageHero>
+
+  <section class="section perks-section">
+    <div class="container grid grid-4">
+      {
+        perks.map((p, i) => (
+          <div class="perk reveal" style={`--delay:${i * 80}ms`}>
+            <span class="icon-badge icon-badge--orange">
+              <Icon name={p.icon} size={22} />
+            </span>
+            <h3>{p.title}</h3>
+            <p>{p.text}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Jobs -->
+  <section class="section section--tint" id="jobs">
+    <div class="container">
+      <SectionHeading eyebrow="Career Opportunities" title="Current job openings" intro="Find a role that matches your experience. Don’t see the right fit? Submit a general application below." />
+
+      {
+        sortedJobs.length > 0 ? (
+          <>
+            <div class="job-filters reveal">
+              <div class="chips" role="group" aria-label="Filter by industry">
+                <button type="button" class="chip is-active" data-filter="all" aria-pressed="true">
+                  All
+                </button>
+                {jobIndustries.map((ind) => (
+                  <button type="button" class="chip" data-filter={ind} aria-pressed="false">
+                    {ind}
+                  </button>
+                ))}
+              </div>
+              <label class="job-search">
+                <Icon name="search" size={18} />
+                <span class="sr-only">Search jobs</span>
+                <input type="search" class="input" placeholder="Search by title or location" data-job-search />
+              </label>
+            </div>
+            <div class="grid grid-3" data-job-list>
+              {sortedJobs.map((job) => (
+                <JobCard job={job} />
+              ))}
+            </div>
+            <p class="no-results" data-no-results hidden>
+              No openings match your search. Try a different filter, or <a href="#apply">submit a general application</a>.
+            </p>
+          </>
+        ) : (
+          <div class="empty reveal">
+            <Icon name="briefcase" size={32} />
+            <h3>No open positions listed right now</h3>
+            <p>New opportunities open regularly. Submit your resume and we’ll contact you when a matching role becomes available.</p>
+            <a href="#apply" class="btn btn--navy">
+              Submit Your Resume
+            </a>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- Apply -->
+  <section class="section" id="apply">
+    <div class="container apply-grid">
+      <div class="apply-info reveal">
+        <span class="eyebrow">Apply Now</span>
+        <h2 class="mt">Submit your application</h2>
+        <p class="lead mt-sm">Apply for a listed role or send a general application. Our recruiters review every profile.</p>
+
+        <h3 class="next-title">What happens next?</h3>
+        <ol class="next-steps">
+          <li><span>1</span><div><strong>Profile review</strong> Our team reviews your resume against current and upcoming roles.</div></li>
+          <li><span>2</span><div><strong>Initial conversation</strong> If there’s a match, a recruiter will call to understand your goals.</div></li>
+          <li><span>3</span><div><strong>Interview support</strong> We share role details and help you prepare for interviews.</div></li>
+          <li><span>4</span><div><strong>Offer &amp; joining</strong> We stay in touch through offer discussions and your first day.</div></li>
+        </ol>
+
+        {
+          wa && (
+            <a href={wa} class="btn btn--whatsapp mt" target="_blank" rel="noopener">
+              <Icon name="brand:whatsapp" size={18} /> Questions? WhatsApp us
+            </a>
+          )
+        }
+      </div>
+      <div class="form-card reveal" style="--delay:100ms">
+        <h2 class="form-title">Job application form</h2>
+        <p>Fields marked * are required.</p>
+        <JobApplicationForm />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const search = document.querySelector<HTMLInputElement>('[data-job-search]');
+  const cards = document.querySelectorAll<HTMLElement>('[data-job]');
+  const empty = document.querySelector<HTMLElement>('[data-no-results]');
+  let active = 'all';
+
+  const apply = () => {
+    const q = (search?.value ?? '').trim().toLowerCase();
+    let shown = 0;
+    cards.forEach((c) => {
+      const match = (active === 'all' || c.dataset.industry === active) && (!q || (c.dataset.search ?? '').includes(q));
+      c.hidden = !match;
+      if (match) shown++;
+    });
+    if (empty) empty.hidden = shown > 0;
+  };
+
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      active = chip.dataset.filter ?? 'all';
+      chips.forEach((c) => {
+        const on = c === chip;
+        c.classList.toggle('is-active', on);
+        c.setAttribute('aria-pressed', String(on));
+      });
+      apply();
+    }),
+  );
+  search?.addEventListener('input', apply);
+</script>
+
+<style>
+  .hero-actions {
+    margin-top: 2rem;
+  }
+  .perks-section {
+    padding-block: clamp(3.5rem, 6vw, 5rem);
+  }
+  .perk h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+  }
+  .perk p {
+    font-size: var(--fs-sm);
+    color: var(--slate-600);
+  }
+  .perk .icon-badge {
+    margin-bottom: 1rem;
+  }
+
+  .job-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .chip {
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--slate-200);
+    background: var(--white);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--slate-700);
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      color 0.2s,
+      border-color 0.2s;
+  }
+  .chip:hover {
+    border-color: var(--navy-800);
+  }
+  .chip.is-active {
+    background: var(--navy-800);
+    border-color: var(--navy-800);
+    color: var(--white);
+  }
+  .job-search {
+    position: relative;
+    flex: 1 1 260px;
+    max-width: 360px;
+  }
+  .job-search :global(.icon) {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--slate-500);
+    pointer-events: none;
+  }
+  .job-search .input {
+    padding-left: 2.75rem;
+    border-radius: 999px;
+  }
+  .no-results {
+    text-align: center;
+    padding: 2rem;
+    color: var(--slate-600);
+  }
+  .empty {
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+    text-align: center;
+    padding: 3rem;
+    border-radius: var(--radius-xl);
+    background: var(--white);
+    border: 1px dashed var(--slate-300);
+    color: var(--slate-600);
+  }
+  .empty :global(.icon) {
+    color: var(--orange-500);
+  }
+
+  .apply-grid {
+    display: grid;
+    gap: 2.5rem;
+    align-items: start;
+  }
+  @media (min-width: 1024px) {
+    .apply-grid {
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 4rem;
+    }
+    .apply-info {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+  .next-title {
+    font-size: 1.1rem;
+    margin: 2rem 0 1rem;
+  }
+  .next-steps {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .next-steps li {
+    display: flex;
+    gap: 1rem;
+    font-size: var(--fs-sm);
+    color: var(--slate-600);
+  }
+  .next-steps li > span {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: var(--orange-100);
+    color: var(--orange-600);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 0.85rem;
+  }
+  .next-steps strong {
+    display: block;
+    color: var(--ink);
+  }
+  .form-title {
+    font-size: var(--fs-2xl);
+  }
+</style>

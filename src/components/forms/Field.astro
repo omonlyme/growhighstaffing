@@ -1,0 +1,75 @@
+---
+interface Props {
+  name: string;
+  label: string;
+  type?: string;
+  id?: string;
+  required?: boolean;
+  placeholder?: string;
+  autocomplete?: string;
+  options?: readonly string[] | { value: string; label: string; id?: string }[];
+  textarea?: boolean;
+  hint?: string;
+  value?: string;
+  pattern?: string;
+  inputmode?: 'text' | 'tel' | 'email' | 'numeric' | 'url';
+  min?: number;
+  rows?: number;
+}
+const {
+  name,
+  label,
+  type = 'text',
+  id: idProp,
+  required = false,
+  placeholder,
+  autocomplete,
+  options,
+  textarea = false,
+  hint,
+  value,
+  pattern,
+  inputmode,
+  min,
+  rows = 5,
+} = Astro.props;
+const id = idProp ?? `f-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Math.random().toString(36).slice(2, 7)}`;
+const hintId = hint ? `${id}-hint` : undefined;
+const opts = options?.map((o) => (typeof o === 'string' ? { value: o, label: o, id: undefined } : o));
+---
+
+<div class="field">
+  <label for={id}>{label}{required && <span class="req" aria-hidden="true"> *</span>}</label>
+  {
+    opts ? (
+      <select class="select" id={id} name={name} required={required} aria-describedby={hintId} data-field={name}>
+        <option value="" disabled={required} selected>
+          {placeholder ?? 'Select an option'}
+        </option>
+        {opts.map((o) => (
+          <option value={o.value} selected={value === o.value} data-id={o.id}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+    ) : textarea ? (
+      <textarea class="textarea" id={id} name={name} required={required} placeholder={placeholder} rows={rows} aria-describedby={hintId} />
+    ) : (
+      <input
+        class="input"
+        id={id}
+        name={name}
+        type={type}
+        required={required}
+        placeholder={placeholder}
+        autocomplete={autocomplete}
+        value={value}
+        pattern={pattern}
+        inputmode={inputmode}
+        min={min}
+        aria-describedby={hintId}
+      />
+    )
+  }
+  {hint && <span class="hint" id={hintId}>{hint}</span>}
+</div>

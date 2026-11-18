@@ -1,0 +1,193 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Icon from '../components/Icon.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import CTABanner from '../components/CTABanner.astro';
+import { services } from '../data/services';
+import { site } from '../config/site';
+import heroImg from '../assets/images/team-collaboration.jpg';
+---
+
+<BaseLayout
+  title="Our Services"
+  description="Permanent staffing, contract staffing, bulk recruitment, executive search, talent acquisition, HR recruitment solutions and workforce management."
+>
+  <PageHero
+    eyebrow="Our Services"
+    title="Recruitment &amp; staffing solutions <span class='text-gradient'>built around you</span>"
+    intro="Whether you need one specialist or an entire team, we offer flexible hiring models designed to deliver the right people at the right time."
+    image={heroImg}
+    crumbs={[{ label: 'Services' }]}
+  />
+
+  <nav class="service-nav" aria-label="Services">
+    <div class="container">
+      <ul>
+        {services.map((s) => <li><a href={`#${s.slug}`}>{s.title}</a></li>)}
+      </ul>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container service-list">
+      {
+        services.map((s, i) => (
+          <article class="service-row reveal" id={s.slug}>
+            <div class="service-head">
+              <span class="service-index">{String(i + 1).padStart(2, '0')}</span>
+              <div class="icon-badge">
+                <Icon name={s.icon} size={28} />
+              </div>
+            </div>
+            <div class="service-body">
+              <h2>{s.title}</h2>
+              <p class="service-summary">{s.summary}</p>
+              <p>{s.description}</p>
+            </div>
+            <div class="service-side">
+              <h3>What’s included</h3>
+              <ul class="check-list">
+                {s.points.map((p) => (
+                  <li>
+                    <Icon name="check" size={18} /> {p}
+                  </li>
+                ))}
+              </ul>
+              <a href={`/employers/?service=${encodeURIComponent(s.title)}#enquiry`} class="link-arrow">
+                Enquire about {s.title} <Icon name="arrow-right" size={16} />
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section section--blue">
+    <div class="container">
+      <SectionHeading eyebrow="How It Works" title="One process, consistently delivered" intro={`Every ${site.name} service follows the same structured, transparent approach.`} />
+      <ProcessSteps />
+    </div>
+  </section>
+
+  <CTABanner title="Not sure which service fits?" text="Tell us about your hiring challenge and we’ll recommend the most effective approach — no obligation." />
+</BaseLayout>
+
+<style>
+  .service-nav {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 50;
+    background: rgb(255 255 255 / 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--slate-200);
+  }
+  .service-nav ul {
+    display: flex;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0.85rem 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .service-nav ul::-webkit-scrollbar {
+    display: none;
+  }
+  .service-nav a {
+    display: block;
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--slate-700);
+    background: var(--slate-100);
+    transition:
+      background 0.2s,
+      color 0.2s;
+  }
+  .service-nav a:hover {
+    background: var(--navy-800);
+    color: var(--white);
+  }
+  .service-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .service-row {
+    display: grid;
+    gap: 1.75rem;
+    padding: clamp(1.75rem, 4vw, 3rem);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--slate-200);
+    background: var(--white);
+    scroll-margin-top: calc(var(--header-h) + 80px);
+    transition:
+      box-shadow 0.35s var(--ease),
+      border-color 0.35s;
+  }
+  .service-row:hover {
+    box-shadow: var(--shadow-lg);
+    border-color: transparent;
+  }
+  .service-row:target {
+    border-color: var(--orange-500);
+    box-shadow: 0 0 0 4px rgb(243 146 0 / 0.15);
+  }
+  @media (min-width: 960px) {
+    .service-row {
+      grid-template-columns: auto 1.2fr 1fr;
+      gap: 3rem;
+    }
+  }
+  .service-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  @media (min-width: 960px) {
+    .service-head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  .service-index {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2.5rem;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--slate-300);
+  }
+  .service-head .icon-badge {
+    margin: 0;
+  }
+  .service-body h2 {
+    font-size: var(--fs-2xl);
+  }
+  .service-summary {
+    font-weight: 600;
+    color: var(--blue-600);
+    margin: 0.6rem 0 0.9rem;
+  }
+  .service-body p:not(.service-summary) {
+    color: var(--slate-600);
+  }
+  .service-side {
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    background: var(--slate-50);
+  }
+  .service-side h3 {
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--slate-500);
+    margin-bottom: 1rem;
+  }
+  .service-side .link-arrow {
+    margin-top: 1.25rem;
+  }
+</style>

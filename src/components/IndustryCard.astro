@@ -1,0 +1,107 @@
+---
+import Icon from './Icon.astro';
+import type { Industry } from '../data/industries';
+interface Props {
+  industry: Industry;
+  delay?: number;
+  detailed?: boolean;
+}
+const { industry, delay = 0, detailed = false } = Astro.props;
+---
+
+<article class:list={['industry-card reveal', { 'industry-card--detailed': detailed }]} style={`--delay:${delay}ms`} id={detailed ? industry.slug : undefined}>
+  <div class="industry-icon"><Icon name={industry.icon} size={detailed ? 30 : 28} /></div>
+  <h3>{industry.title}</h3>
+  <p>{industry.summary}</p>
+  {
+    detailed && (
+      <ul class="roles" aria-label={`Example roles in ${industry.title}`}>
+        {industry.roles.map((r) => (
+          <li class="tag">{r}</li>
+        ))}
+      </ul>
+    )
+  }
+</article>
+
+<style>
+  .industry-card {
+    position: relative;
+    padding: 1.75rem;
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      transform 0.35s var(--ease),
+      box-shadow 0.35s var(--ease),
+      color 0.35s;
+  }
+  .industry-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(140deg, var(--navy-900), var(--blue-600));
+    opacity: 0;
+    transition: opacity 0.4s var(--ease);
+  }
+  .industry-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+  }
+  .industry-card:hover::before {
+    opacity: 1;
+  }
+  .industry-card:hover h3 {
+    color: var(--white);
+  }
+  .industry-card:hover p {
+    color: rgb(255 255 255 / 0.78);
+  }
+  .industry-card:hover .industry-icon {
+    background: rgb(255 255 255 / 0.12);
+    color: var(--orange-500);
+  }
+  .industry-card:hover .tag {
+    background: rgb(255 255 255 / 0.12);
+    color: var(--white);
+  }
+  .industry-icon {
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 18px;
+    background: var(--orange-100);
+    color: var(--orange-600);
+    margin-bottom: 1.25rem;
+    transition:
+      background 0.35s,
+      color 0.35s;
+  }
+  h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.45rem;
+    transition: color 0.35s;
+  }
+  p {
+    font-size: var(--fs-sm);
+    color: var(--slate-600);
+    transition: color 0.35s;
+  }
+  .roles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    list-style: none;
+    padding: 0;
+    margin-top: 1.25rem;
+  }
+  .tag {
+    transition:
+      background 0.35s,
+      color 0.35s;
+  }
+</style>

@@ -1,0 +1,303 @@
+---
+import Icon from './Icon.astro';
+import { nav, site } from '../config/site';
+
+const path = Astro.url.pathname.replace(/\/?$/, '/');
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a href="/" class="brand" aria-label={`${site.name} — home`}>
+      <img class="brand-logo brand-logo--light" src="/images/logo-horizontal-white.png" alt="" width="783" height="162" />
+      <img class="brand-logo brand-logo--dark" src="/images/logo-horizontal.png" alt="" width="783" height="162" />
+    </a>
+
+    <nav class="nav-desktop" aria-label="Main">
+      <ul>
+        {
+          nav.slice(1).map((item) => (
+            <li>
+              <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <a href="/employers/#enquiry" class="btn btn--primary btn--sm header-cta">Hire Talent</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
+        <span class="sr-only">Open menu</span>
+        <Icon name="menu" size={26} class="icon-open" />
+        <Icon name="x" size={26} class="icon-close" />
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" data-mobile-menu hidden>
+    <nav aria-label="Mobile">
+      <ul>
+        {
+          nav.map((item, i) => (
+            <li style={`--i:${i}`}>
+              <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                {item.label}
+                <Icon name="arrow-right" size={20} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="mobile-menu-cta">
+        <a href="/employers/#enquiry" class="btn btn--primary btn--block">Hire Talent</a>
+        <a href="/candidates/#apply" class="btn btn--outline btn--block">Submit Your Resume</a>
+      </div>
+      <div class="mobile-menu-contact">
+        <a href={`mailto:${site.email}`}><Icon name="mail" size={18} /> {site.email}</a>
+        {site.phone && <a href={`tel:${site.phoneHref}`}><Icon name="phone" size={18} /> {site.phone}</a>}
+      </div>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 100;
+    height: var(--header-h);
+    color: var(--white);
+    transition:
+      background-color 0.35s var(--ease),
+      box-shadow 0.35s var(--ease),
+      color 0.35s,
+      height 0.35s var(--ease);
+  }
+  .site-header.is-scrolled,
+  .site-header.is-open {
+    background: rgb(255 255 255 / 0.92);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    box-shadow: 0 1px 0 var(--slate-200), 0 8px 24px -16px rgb(10 37 64 / 0.25);
+    color: var(--navy-900);
+  }
+  .header-inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+  .brand {
+    position: relative;
+    display: block;
+    flex-shrink: 0;
+  }
+  .brand-logo {
+    height: 44px;
+    width: auto;
+    transition: opacity 0.3s;
+  }
+  .brand-logo--dark {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+  .is-scrolled .brand-logo--dark,
+  .is-open .brand-logo--dark {
+    opacity: 1;
+  }
+  .is-scrolled .brand-logo--light,
+  .is-open .brand-logo--light {
+    opacity: 0;
+  }
+
+  .nav-desktop {
+    display: none;
+  }
+  .nav-desktop ul {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+    padding: 0;
+  }
+  .nav-desktop a {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0.8rem;
+    font-family: var(--font-display);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: inherit;
+    opacity: 0.88;
+    transition: opacity 0.2s;
+  }
+  .nav-desktop a::after {
+    content: '';
+    position: absolute;
+    left: 0.8rem;
+    right: 0.8rem;
+    bottom: 0.15rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--orange-500);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease);
+  }
+  .nav-desktop a:hover,
+  .nav-desktop a[aria-current='page'] {
+    opacity: 1;
+  }
+  .nav-desktop a:hover::after,
+  .nav-desktop a[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .header-cta {
+    display: none;
+  }
+  .menu-toggle {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+  .menu-toggle :global(.icon-close) {
+    display: none;
+  }
+  .is-open .menu-toggle :global(.icon-close) {
+    display: block;
+  }
+  .is-open .menu-toggle :global(.icon-open) {
+    display: none;
+  }
+
+  .mobile-menu {
+    position: fixed;
+    inset: var(--header-h) 0 0 0;
+    background: var(--white);
+    color: var(--navy-900);
+    overflow-y: auto;
+    padding: 1rem var(--gutter) 2rem;
+    animation: menu-in 0.35s var(--ease);
+  }
+  .mobile-menu ul {
+    list-style: none;
+    padding: 0;
+  }
+  .mobile-menu li {
+    border-bottom: 1px solid var(--slate-200);
+    animation: item-in 0.45s var(--ease) both;
+    animation-delay: calc(var(--i) * 40ms);
+  }
+  .mobile-menu li a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0.25rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--navy-900);
+  }
+  .mobile-menu li a[aria-current='page'] {
+    color: var(--blue-600);
+  }
+  .mobile-menu li a :global(.icon) {
+    color: var(--orange-500);
+  }
+  .mobile-menu-cta {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+  }
+  .mobile-menu-contact {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+    font-size: var(--fs-sm);
+  }
+  .mobile-menu-contact a {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--slate-600);
+  }
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+  @keyframes item-in {
+    from {
+      opacity: 0;
+      transform: translateX(-12px);
+    }
+  }
+
+  @media (min-width: 640px) {
+    .header-cta {
+      display: inline-flex;
+    }
+  }
+  @media (min-width: 1080px) {
+    .nav-desktop {
+      display: block;
+    }
+    .menu-toggle {
+      display: none;
+    }
+    .mobile-menu {
+      display: none !important;
+    }
+  }
+  @media (max-width: 400px) {
+    .brand-logo {
+      height: 36px;
+    }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]')!;
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]')!;
+  const menu = document.querySelector<HTMLElement>('[data-mobile-menu]')!;
+
+  const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 24);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const setOpen = (open: boolean) => {
+    menu.hidden = !open;
+    header.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.querySelector('.sr-only')!.textContent = open ? 'Close menu' : 'Open menu';
+    document.body.style.overflow = open ? 'hidden' : '';
+  };
+  toggle.addEventListener('click', () => setOpen(menu.hidden));
+  menu.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) setOpen(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu.hidden) {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+  window.matchMedia('(min-width: 1080px)').addEventListener('change', (e) => e.matches && setOpen(false));
+</script>

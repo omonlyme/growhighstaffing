@@ -1,0 +1,86 @@
+---
+import Icon from './Icon.astro';
+import type { Job } from '../data/jobs';
+interface Props {
+  job: Job;
+}
+const { job } = Astro.props;
+const posted = new Date(job.posted + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+---
+
+<article class="job-card" data-job data-industry={job.industry} data-search={`${job.title} ${job.location} ${job.industry}`.toLowerCase()}>
+  <div class="job-top">
+    <span class="tag tag--blue">{job.industry}</span>
+    <span class="tag tag--orange">{job.type}</span>
+  </div>
+  <h3>{job.title}</h3>
+  <p>{job.summary}</p>
+  <ul class="job-meta">
+    <li><Icon name="map-pin" size={16} /> {job.location}</li>
+    <li><Icon name="briefcase" size={16} /> {job.experience}</li>
+    <li><Icon name="calendar" size={16} /> <time datetime={job.posted}>{posted}</time></li>
+  </ul>
+  <a href={`/candidates/?role=${encodeURIComponent(job.id)}#apply`} class="btn btn--navy btn--sm job-apply" data-apply={job.id}>
+    Apply Now <Icon name="arrow-right" size={16} class="icon-arrow" />
+  </a>
+</article>
+
+<style>
+  .job-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.75rem;
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    transition:
+      transform 0.35s var(--ease),
+      box-shadow 0.35s var(--ease),
+      border-color 0.35s;
+  }
+  .job-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: transparent;
+  }
+  .job-card[hidden] {
+    display: none;
+  }
+  .job-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  p {
+    font-size: var(--fs-sm);
+    color: var(--slate-600);
+    flex: 1;
+  }
+  .job-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    list-style: none;
+    padding: 1rem 0 0;
+    margin: 1.25rem 0;
+    border-top: 1px solid var(--slate-100);
+    font-size: var(--fs-xs);
+    color: var(--slate-600);
+  }
+  .job-meta li {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .job-meta :global(.icon) {
+    color: var(--blue-500);
+  }
+  .job-apply {
+    align-self: flex-start;
+  }
+</style>

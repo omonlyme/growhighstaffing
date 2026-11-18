@@ -1,0 +1,36 @@
+---
+import FormShell from './FormShell.astro';
+import Field from './Field.astro';
+import { site } from '../../config/site';
+import { services } from '../../data/services';
+import { industries } from '../../data/industries';
+---
+
+<FormShell
+  formName="Employer Enquiry"
+  subject={`New hiring enquiry — ${site.name} website`}
+  submitLabel="Submit Hiring Enquiry"
+  autoresponse={`Thank you for your hiring enquiry with ${site.name}. Our recruitment team will review your requirements and contact you shortly.`}
+>
+  <div class="form-row">
+    <Field name="Name" label="Your name" required autocomplete="name" placeholder="Full name" />
+    <Field name="Designation" label="Designation" autocomplete="organization-title" placeholder="e.g. HR Manager" />
+  </div>
+  <div class="form-row">
+    <Field name="Company" label="Company name" required autocomplete="organization" placeholder="Company name" />
+    <Field name="City" label="City / Location" placeholder="Where are the roles based?" />
+  </div>
+  <div class="form-row">
+    <Field name="email" label="Work email" type="email" required autocomplete="email" placeholder="you@company.com" />
+    <Field name="Phone" label="Phone number" type="tel" required autocomplete="tel" inputmode="tel" placeholder="+91 98765 43210" />
+  </div>
+  <div class="form-row">
+    <Field name="Service required" label="Service required" required options={[...services.map((s) => s.title), 'Not sure — need advice']} placeholder="Select a service" />
+    <Field name="Industry" label="Industry" options={[...industries.map((i) => i.title), 'Other']} placeholder="Select industry" />
+  </div>
+  <div class="form-row">
+    <Field name="Positions" label="Number of positions" type="number" min={1} inputmode="numeric" placeholder="e.g. 5" />
+    <Field name="Timeline" label="Hiring timeline" options={['Immediately', 'Within 2 weeks', 'Within a month', '1–3 months', 'Just exploring']} placeholder="Select timeline" />
+  </div>
+  <Field name="Requirements" label="Role details & requirements" textarea required placeholder="Job titles, key skills, experience level, budget range, etc." />
+</FormShell>

@@ -1,0 +1,261 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import ContactForm from '../components/forms/ContactForm.astro';
+import { site, fullAddress, whatsappLink } from '../config/site';
+import heroImg from '../assets/images/office.jpg';
+
+const wa = whatsappLink();
+const address = fullAddress();
+const cards = [
+  { icon: 'mail', title: 'Email us', value: site.email, href: `mailto:${site.email}`, note: 'We reply within one business day' },
+  site.phone && { icon: 'phone', title: 'Call us', value: site.phone, href: `tel:${site.phoneHref}`, note: site.hours },
+  wa && { icon: 'brand:whatsapp', title: 'WhatsApp', value: 'Chat with our team', href: wa, note: 'Quick questions & updates', external: true },
+  address && { icon: 'map-pin', title: 'Visit us', value: address, note: 'By appointment' },
+].filter(Boolean) as { icon: string; title: string; value: string; href?: string; note?: string; external?: boolean }[];
+const mapsSearch = address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}` : '';
+---
+
+<BaseLayout title="Contact Us" description={`Get in touch with ${site.name}. Email ${site.email}, call, WhatsApp or send us a message for recruitment and staffing enquiries.`}>
+  <PageHero
+    eyebrow="Contact Us"
+    title="Let’s start a <span class='text-gradient'>conversation</span>"
+    intro="Whether you’re hiring or looking for your next role, our team is here to help. Reach out using any of the options below."
+    image={heroImg}
+    crumbs={[{ label: 'Contact' }]}
+  />
+
+  <section class="contact-cards">
+    <div class="container grid grid-4">
+      {
+        cards.map((c, i) => (
+          <div class="contact-card reveal" style={`--delay:${i * 80}ms`}>
+            <span class="icon-badge">
+              <Icon name={c.icon} size={24} />
+            </span>
+            <h2>{c.title}</h2>
+            {c.href ? (
+              <a href={c.href} target={c.external ? '_blank' : undefined} rel={c.external ? 'noopener' : undefined}>
+                {c.value}
+              </a>
+            ) : (
+              <address>{c.value}</address>
+            )}
+            {c.note && <p>{c.note}</p>}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container contact-grid">
+      <div class="form-card reveal">
+        <span class="eyebrow">Send a Message</span>
+        <h2 class="form-title">How can we help?</h2>
+        <p>Fill in the form and the right person from our team will get back to you.</p>
+        <ContactForm />
+      </div>
+
+      <aside class="contact-side">
+        {
+          site.mapEmbedUrl ? (
+            <div class="map reveal">
+              <iframe src={site.mapEmbedUrl} title={`${site.name} office location`} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen />
+            </div>
+          ) : (
+            address && (
+              <a class="map map--placeholder reveal" href={mapsSearch} target="_blank" rel="noopener">
+                <Icon name="map" size={36} />
+                <strong>Find us on Google Maps</strong>
+                <span>{address}</span>
+              </a>
+            )
+          )
+        }
+
+        <div class="side-card reveal" style="--delay:100ms">
+          <h3>Looking for something specific?</h3>
+          <a href="/employers/#enquiry" class="side-link">
+            <Icon name="building" size={20} />
+            <span><strong>I want to hire</strong> Submit a hiring enquiry</span>
+            <Icon name="arrow-right" size={18} />
+          </a>
+          <a href="/candidates/#apply" class="side-link">
+            <Icon name="briefcase" size={20} />
+            <span><strong>I’m looking for a job</strong> Apply or upload your resume</span>
+            <Icon name="arrow-right" size={18} />
+          </a>
+          <a href="/employers/#callback" class="side-link">
+            <Icon name="phone" size={20} />
+            <span><strong>Call me back</strong> Request a callback</span>
+            <Icon name="arrow-right" size={18} />
+          </a>
+        </div>
+
+        {
+          site.hours && (
+            <div class="hours reveal" style="--delay:160ms">
+              <Icon name="clock" size={22} />
+              <div>
+                <strong>Business hours</strong>
+                <span>{site.hours}</span>
+              </div>
+            </div>
+          )
+        }
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-cards {
+    position: relative;
+    z-index: 2;
+    margin-top: -3.5rem;
+  }
+  .contact-card {
+    padding: 1.75rem;
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    box-shadow: var(--shadow-lg);
+  }
+  .contact-card .icon-badge {
+    margin-bottom: 1rem;
+  }
+  .contact-card h2 {
+    font-size: var(--fs-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+    margin-bottom: 0.4rem;
+  }
+  .contact-card a,
+  .contact-card address {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 650;
+    font-style: normal;
+    color: var(--ink);
+    word-break: break-word;
+    line-height: 1.4;
+  }
+  .contact-card a:hover {
+    color: var(--blue-600);
+  }
+  .contact-card p {
+    margin-top: 0.4rem;
+    font-size: var(--fs-xs);
+    color: var(--slate-500);
+  }
+  .contact-grid {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+  }
+  @media (min-width: 1024px) {
+    .contact-grid {
+      grid-template-columns: 1.4fr 1fr;
+    }
+  }
+  .form-title {
+    font-size: var(--fs-2xl);
+    margin-top: 0.75rem;
+  }
+  .contact-side {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .map {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--slate-200);
+  }
+  .map iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .map--placeholder {
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 0.5rem;
+    padding: 2rem;
+    text-align: center;
+    background:
+      linear-gradient(rgb(255 255 255 / 0.9), rgb(255 255 255 / 0.9)),
+      repeating-linear-gradient(45deg, var(--blue-100) 0 1px, transparent 1px 22px),
+      repeating-linear-gradient(-45deg, var(--blue-100) 0 1px, transparent 1px 22px);
+    color: var(--slate-600);
+    font-size: var(--fs-sm);
+  }
+  .map--placeholder :global(.icon) {
+    color: var(--orange-500);
+  }
+  .map--placeholder strong {
+    font-family: var(--font-display);
+    color: var(--ink);
+  }
+  .side-card {
+    padding: 1.75rem;
+    border-radius: var(--radius-lg);
+    background: var(--slate-50);
+    border: 1px solid var(--slate-200);
+  }
+  .side-card h3 {
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+  }
+  .side-link {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.9rem 0;
+    border-top: 1px solid var(--slate-200);
+    color: var(--slate-600);
+    font-size: var(--fs-xs);
+  }
+  .side-link > :global(.icon:first-child) {
+    color: var(--blue-600);
+    flex-shrink: 0;
+  }
+  .side-link > :global(.icon:last-child) {
+    color: var(--slate-400, #94a3b8);
+    transition: transform 0.25s var(--ease);
+  }
+  .side-link span {
+    flex: 1;
+  }
+  .side-link strong {
+    display: block;
+    font-size: var(--fs-sm);
+    color: var(--ink);
+  }
+  .side-link:hover > :global(.icon:last-child) {
+    transform: translateX(4px);
+    color: var(--orange-500);
+  }
+  .hours {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-radius: var(--radius-lg);
+    background: var(--navy-900);
+    color: rgb(255 255 255 / 0.75);
+    font-size: var(--fs-sm);
+  }
+  .hours :global(.icon) {
+    color: var(--orange-500);
+    flex-shrink: 0;
+  }
+  .hours strong {
+    display: block;
+    color: var(--white);
+  }
+</style>

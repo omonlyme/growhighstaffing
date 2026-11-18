@@ -1,0 +1,96 @@
+---
+/**
+ * Wraps a form and wires it to FormSubmit.co (free form-to-email service).
+ * Submissions are emailed to the address configured in src/config/site.ts.
+ */
+import Icon from '../Icon.astro';
+import { site } from '../../config/site';
+
+interface Props {
+  formName: string;
+  subject: string;
+  submitLabel?: string;
+  multipart?: boolean;
+  id?: string;
+  autoresponse?: string;
+  compact?: boolean;
+}
+const {
+  formName,
+  subject,
+  submitLabel = 'Submit',
+  multipart = false,
+  id,
+  autoresponse = `Thank you for contacting ${site.name}. We have received your message and our team will get back to you shortly.`,
+  compact = false,
+} = Astro.props;
+const next = new URL(`/thank-you/?form=${encodeURIComponent(formName)}`, site.url).href;
+---
+
+<form
+  class:list={['form', { 'form--compact': compact }]}
+  action={site.formEndpoint}
+  method="POST"
+  enctype={multipart ? 'multipart/form-data' : undefined}
+  id={id}
+  data-form
+>
+  <input type="hidden" name="_subject" value={subject} />
+  <input type="hidden" name="_next" value={next} />
+  <input type="hidden" name="_captcha" value="false" />
+  <input type="hidden" name="_template" value="table" />
+  <input type="hidden" name="_autoresponse" value={autoresponse} />
+  <input type="hidden" name="Form" value={formName} />
+  <div class="hp-field" aria-hidden="true">
+    <label>Leave this field empty <input type="text" name="_honey" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+  <slot />
+
+  <label class="consent">
+    <input type="checkbox" name="Consent" value="Agreed to be contacted" required />
+    <span>I agree that {site.name} may store and use these details to respond to my enquiry.</span>
+  </label>
+
+  <button type="submit" class="btn btn--primary btn--block" data-submit>
+    <span data-submit-label>{submitLabel}</span>
+    <Icon name="arrow-right" size={18} class="icon-arrow" />
+  </button>
+  <p class="form-note">We usually respond within one business day.</p>
+</form>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('form[data-form]').forEach((form) => {
+    form.addEventListener('submit', (e) => {
+      // Validate file size limits before upload
+      for (const input of form.querySelectorAll<HTMLInputElement>('input[type="file"][data-max-mb]')) {
+        const max = Number(input.dataset.maxMb) * 1024 * 1024;
+        const file = input.files?.[0];
+        if (file && file.size > max) {
+          e.preventDefault();
+          input.setCustomValidity(`File is too large. Maximum size is ${input.dataset.maxMb} MB.`);
+          input.reportValidity();
+          return;
+        }
+        input.setCustomValidity('');
+      }
+      const btn = form.querySelector<HTMLButtonElement>('[data-submit]');
+      const label = form.querySelector<HTMLElement>('[data-submit-label]');
+      if (btn && label) {
+        label.dataset.original ??= label.textContent ?? '';
+        btn.disabled = true;
+        label.textContent = 'Sending…';
+      }
+    });
+  });
+  // Re-enable buttons if the page is restored from back/forward cache
+  window.addEventListener('pageshow', (e) => {
+    if (!e.persisted) return;
+    document.querySelectorAll<HTMLFormElement>('form[data-form]').forEach((form) => {
+      const btn = form.querySelector<HTMLButtonElement>('[data-submit]');
+      const label = form.querySelector<HTMLElement>('[data-submit-label]');
+      if (btn) btn.disabled = false;
+      if (label?.dataset.original) label.textContent = label.dataset.original;
+    });
+  });
+</script>
