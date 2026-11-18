@@ -22,7 +22,8 @@ export const site = {
     { display: '+91 99250 94335', href: '+919925094335' },
     { display: '+91 75740 31556', href: '+917574031556' },
   ],
-  whatsapp: '919925094335', // WhatsApp number, digits only with country code (no + or spaces)
+  whatsapp: '916323273354', // WhatsApp number, digits only with country code (no + or spaces)
+  whatsappDisplay: '+91 63232 73354', // WhatsApp number as shown on the site
   whatsappMessage: 'Hello Growhigh Staffing, I would like to know more about your recruitment services.',
   address: {
     line1: '204, Shrenaathji Icon',

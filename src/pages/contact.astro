@@ -15,7 +15,7 @@ type Card = { icon: string; title: string; links?: { label: string; href: string
 const cards = [
   { icon: 'mail', title: 'Email us', links: [{ label: site.email, href: `mailto:${site.email}` }], note: 'We reply within one business day' },
   site.phones.length > 0 && { icon: 'phone', title: 'Call us', links: site.phones.map((p) => ({ label: p.display, href: `tel:${p.href}` })), note: site.hours },
-  wa && { icon: 'brand:whatsapp', title: 'WhatsApp', links: [{ label: 'Chat with our team', href: wa, external: true }], note: 'Quick questions & updates' },
+  wa && { icon: 'brand:whatsapp', title: 'WhatsApp', links: [{ label: site.whatsappDisplay || 'Chat with our team', href: wa, external: true }], note: 'Chat with our team' },
   address && { icon: 'map-pin', title: 'Visit us', text: address, links: [{ label: 'Get directions →', href: mapsSearchUrl(address), external: true }] },
 ].filter(Boolean) as Card[];
 const mapsSearch = address ? mapsSearchUrl(address) : '';

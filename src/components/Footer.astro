@@ -86,7 +86,7 @@ const wa = whatsappLink();
             <li>
               <Icon name="brand:whatsapp" size={18} />
               <a href={wa} target="_blank" rel="noopener">
-                Chat on WhatsApp
+                {site.whatsappDisplay ? `WhatsApp: ${site.whatsappDisplay}` : 'Chat on WhatsApp'}
               </a>
             </li>
           )
