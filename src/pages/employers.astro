@@ -121,7 +121,7 @@ const benefits = [
         <div class="direct reveal" style="--delay:160ms">
           <h3>Or reach us directly</h3>
           <a href={`mailto:${site.email}`}><Icon name="mail" size={18} /> {site.email}</a>
-          {site.phone && <a href={`tel:${site.phoneHref}`}><Icon name="phone" size={18} /> {site.phone}</a>}
+          {site.phones.map((p) => <a href={`tel:${p.href}`}><Icon name="phone" size={18} /> {p.display}</a>)}
           {
             wa && (
               <a href={wa} target="_blank" rel="noopener">

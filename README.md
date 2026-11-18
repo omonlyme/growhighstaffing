@@ -19,7 +19,7 @@ DNS is on **Cloudflare**, email (info@growhighstaffing.com) is on **Zoho Mail Fr
 | Photos | `src/assets/images/` |
 | Logo | Replace `brand/logo-source.jpeg`, then run `python3 scripts/build-logos.py`. This regenerates every logo, favicon and the social-share image. |
 
-> ⚠️ **Before launch:** replace every value marked `TODO` in `src/config/site.ts`: phone, WhatsApp number, address and hours. Also replace the **sample** jobs in `src/data/jobs.ts`, or set `jobs = []`.
+> **Adding a job:** copy the example entry at the bottom of `src/data/jobs.ts` into the `jobs` array, edit it, then commit and push. While the list is empty, the site shows a "no openings right now" message with a resume upload prompt.
 
 Every push to `main` rebuilds and redeploys the site automatically (about 1–2 minutes).
 

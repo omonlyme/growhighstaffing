@@ -30,7 +30,7 @@ const jsonLd = {
   logo: new URL('/images/logo.png', site.url).href,
   image: ogImage,
   email: site.email,
-  ...(site.phoneHref && { telephone: site.phoneHref }),
+  ...(site.phones.length > 0 && { telephone: site.phones.map((p) => p.href) }),
   ...(fullAddress() && {
     address: {
       '@type': 'PostalAddress',

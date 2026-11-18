@@ -70,10 +70,14 @@ const wa = whatsappLink();
           <a href={`mailto:${site.email}`}>{site.email}</a>
         </li>
         {
-          site.phone && (
+          site.phones.length > 0 && (
             <li>
               <Icon name="phone" size={18} />
-              <a href={`tel:${site.phoneHref}`}>{site.phone}</a>
+              <span class="phone-list">
+                {site.phones.map((p) => (
+                  <a href={`tel:${p.href}`}>{p.display}</a>
+                ))}
+              </span>
             </li>
           )
         }
@@ -188,6 +192,10 @@ const wa = whatsappLink();
   }
   address {
     font-style: normal;
+  }
+  .phone-list {
+    display: grid;
+    gap: 0.35rem;
   }
   .socials {
     display: flex;

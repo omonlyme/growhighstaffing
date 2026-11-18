@@ -7,14 +7,18 @@ import { site, fullAddress, whatsappLink } from '../config/site';
 import heroImg from '../assets/images/office.jpg';
 
 const wa = whatsappLink();
+function mapsSearchUrl(q: string) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+}
 const address = fullAddress();
+type Card = { icon: string; title: string; links?: { label: string; href: string; external?: boolean }[]; text?: string; note?: string };
 const cards = [
-  { icon: 'mail', title: 'Email us', value: site.email, href: `mailto:${site.email}`, note: 'We reply within one business day' },
-  site.phone && { icon: 'phone', title: 'Call us', value: site.phone, href: `tel:${site.phoneHref}`, note: site.hours },
-  wa && { icon: 'brand:whatsapp', title: 'WhatsApp', value: 'Chat with our team', href: wa, note: 'Quick questions & updates', external: true },
-  address && { icon: 'map-pin', title: 'Visit us', value: address, note: 'By appointment' },
-].filter(Boolean) as { icon: string; title: string; value: string; href?: string; note?: string; external?: boolean }[];
-const mapsSearch = address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}` : '';
+  { icon: 'mail', title: 'Email us', links: [{ label: site.email, href: `mailto:${site.email}` }], note: 'We reply within one business day' },
+  site.phones.length > 0 && { icon: 'phone', title: 'Call us', links: site.phones.map((p) => ({ label: p.display, href: `tel:${p.href}` })), note: site.hours },
+  wa && { icon: 'brand:whatsapp', title: 'WhatsApp', links: [{ label: 'Chat with our team', href: wa, external: true }], note: 'Quick questions & updates' },
+  address && { icon: 'map-pin', title: 'Visit us', text: address, links: [{ label: 'Get directions →', href: mapsSearchUrl(address), external: true }] },
+].filter(Boolean) as Card[];
+const mapsSearch = address ? mapsSearchUrl(address) : '';
 ---
 
 <BaseLayout title="Contact Us" description={`Get in touch with ${site.name}. Email ${site.email}, call, WhatsApp or send us a message for recruitment and staffing enquiries.`}>
@@ -35,13 +39,12 @@ const mapsSearch = address ? `https://www.google.com/maps/search/?api=1&query=${
               <Icon name={c.icon} size={24} />
             </span>
             <h2>{c.title}</h2>
-            {c.href ? (
-              <a href={c.href} target={c.external ? '_blank' : undefined} rel={c.external ? 'noopener' : undefined}>
-                {c.value}
+            {c.text && <address>{c.text}</address>}
+            {c.links?.map((l) => (
+              <a href={l.href} target={l.external ? '_blank' : undefined} rel={l.external ? 'noopener' : undefined} class:list={{ 'card-sub-link': !!c.text }}>
+                {l.label}
               </a>
-            ) : (
-              <address>{c.value}</address>
-            )}
+            ))}
             {c.note && <p>{c.note}</p>}
           </div>
         ))
@@ -138,12 +141,21 @@ const mapsSearch = address ? `https://www.google.com/maps/search/?api=1&query=${
     display: block;
     font-family: var(--font-display);
     font-weight: 650;
+    font-size: var(--fs-sm);
     font-style: normal;
     color: var(--ink);
-    word-break: break-word;
-    line-height: 1.4;
+    overflow-wrap: anywhere;
+    line-height: 1.45;
+  }
+  .contact-card a + a {
+    margin-top: 0.25rem;
   }
   .contact-card a:hover {
+    color: var(--blue-600);
+  }
+  .contact-card .card-sub-link {
+    margin-top: 0.6rem;
+    font-size: var(--fs-sm);
     color: var(--blue-600);
   }
   .contact-card p {
