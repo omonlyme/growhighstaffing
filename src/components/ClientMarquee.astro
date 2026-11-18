@@ -19,7 +19,13 @@ const { title = 'Trusted by leading organisations' } = Astro.props;
           <ul class="marquee-track" aria-hidden={copy === 1 ? 'true' : undefined}>
             {clients.map((c) => (
               <li class="client">
-                <span class="client-badge">{c.short}</span>
+                {c.logo ? (
+                  <span class="client-logo">
+                    <img src={c.logo} alt="" width="128" height="128" loading="lazy" decoding="async" />
+                  </span>
+                ) : (
+                  <span class="client-badge">{c.short}</span>
+                )}
                 <span class="client-text">
                   <strong>{c.name}</strong>
                   <small>{c.type}</small>
@@ -112,6 +118,22 @@ const { title = 'Trusted by leading organisations' } = Astro.props;
     background: linear-gradient(135deg, var(--orange-600), #ffb547);
     color: var(--navy-950);
   }
+  .client-logo {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    overflow: hidden;
+  }
+  .client-logo img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+  }
   .client-text {
     display: grid;
     line-height: 1.25;
@@ -140,6 +162,7 @@ const { title = 'Trusted by leading organisations' } = Astro.props;
     }
     .marquee-track {
       animation: none;
+      flex: 1 1 100%;
       flex-wrap: wrap;
       justify-content: center;
       min-width: 0;
