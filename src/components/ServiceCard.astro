@@ -8,11 +8,11 @@ interface Props {
 const { service, delay = 0 } = Astro.props;
 ---
 
-<a href={`/services/#${service.slug}`} class="card card--hover service-card reveal" style={`--delay:${delay}ms`}>
+<a href={`/services/#${service.slug}`} class="card card--hover service-card m-row reveal" style={`--delay:${delay}ms`}>
   <div class="icon-badge"><Icon name={service.icon} size={26} /></div>
   <h3>{service.title}</h3>
   <p>{service.summary}</p>
-  <span class="link-arrow">Learn more <Icon name="arrow-right" size={16} /></span>
+  <span class="link-arrow m-hide">Learn more <Icon name="arrow-right" size={16} /></span>
 </a>
 
 <style>

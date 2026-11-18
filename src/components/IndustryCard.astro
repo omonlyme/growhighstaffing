@@ -9,8 +9,8 @@ interface Props {
 const { industry, delay = 0, detailed = false } = Astro.props;
 ---
 
-<article class:list={['industry-card reveal', { 'industry-card--detailed': detailed }]} style={`--delay:${delay}ms`} id={detailed ? industry.slug : undefined}>
-  <div class="industry-icon"><Icon name={industry.icon} size={detailed ? 30 : 28} /></div>
+<article class:list={['industry-card m-row reveal', { 'industry-card--detailed': detailed }]} style={`--delay:${delay}ms`} id={detailed ? industry.slug : undefined}>
+  <div class="industry-icon m-icon"><Icon name={industry.icon} size={detailed ? 30 : 28} /></div>
   <h3>{industry.title}</h3>
   <p>{industry.summary}</p>
   {

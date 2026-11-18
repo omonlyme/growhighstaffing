@@ -157,8 +157,8 @@ const latestJobs = [...jobs].sort((a, b) => b.posted.localeCompare(a.posted)).sl
       <div class="why-list">
         {
           whyChoose.map((w, i) => (
-            <div class="why-item reveal" style={`--delay:${(i % 2) * 100}ms`}>
-              <span class="why-icon"><Icon name={w.icon} size={22} /></span>
+            <div class="why-item m-row reveal" style={`--delay:${(i % 2) * 100}ms`}>
+              <span class="why-icon m-icon"><Icon name={w.icon} size={22} /></span>
               <h3>{w.title}</h3>
               <p>{w.text}</p>
             </div>
@@ -394,6 +394,17 @@ const latestJobs = [...jobs].sort((a, b) => b.posted.localeCompare(a.posted)).sl
   @keyframes float {
     50% {
       transform: translateY(-10px);
+    }
+  }
+  @media (max-width: 639px) {
+    .hero-visual {
+      max-width: 340px;
+    }
+    .hero-photo {
+      aspect-ratio: 1 / 1;
+    }
+    .float-card {
+      padding: 0.7rem 0.9rem;
     }
   }
   @media (max-width: 600px) {

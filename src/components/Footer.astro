@@ -142,6 +142,19 @@ const wa = whatsappLink();
       grid-template-columns: 1.5fr 1fr 1fr 1.3fr;
     }
   }
+  @media (max-width: 639px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2.25rem 1.25rem;
+    }
+    .footer-grid > :first-child,
+    .footer-grid > :last-child {
+      grid-column: 1 / -1;
+    }
+    .footer-brand img {
+      width: 150px;
+    }
+  }
   .footer-brand img {
     width: 170px;
     margin-bottom: 1.25rem;

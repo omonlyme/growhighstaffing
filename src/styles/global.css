@@ -788,3 +788,42 @@ p {
     opacity: 0;
   }
 }
+
+/* ───────────────────────── Phone layout helpers ───────────────────────── */
+@media (max-width: 639px) {
+  /* Compact cards: icon beside the text instead of above it */
+  .m-row {
+    display: grid !important;
+    grid-template-columns: auto 1fr;
+    column-gap: 1rem;
+    align-items: start;
+    padding: 1.25rem !important;
+  }
+  .m-row > .icon-badge,
+  .m-row > .m-icon {
+    grid-column: 1;
+    grid-row: 1 / span 10;
+    --badge-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin: 0 !important;
+    border-radius: 14px;
+  }
+  .m-row > :not(.icon-badge):not(.m-icon) {
+    grid-column: 2;
+  }
+  .m-row h3 {
+    margin-top: 0.1rem;
+    margin-bottom: 0.3rem !important;
+    font-size: 1.05rem !important;
+  }
+  .m-row p {
+    margin-bottom: 0 !important;
+  }
+  .m-hide {
+    display: none !important;
+  }
+  .section-heading {
+    margin-bottom: 2rem;
+  }
+}
