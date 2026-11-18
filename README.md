@@ -53,7 +53,7 @@ npm run preview   # preview the production build
    | AAAA | `@` | `2606:50c0:8003::153` |
    | CNAME | `www` | `omonlyme.github.io` |
 
-   The complete DNS (website + email) is in `dns/growhighstaffing.com.zone`, ready for **Cloudflare → DNS → Records → Import and Export → Import**. Leave "Proxy imported DNS records" unchecked. `dns/growhighstaffing.com.txt` is an export of the live Cloudflare zone, kept as a backup.
+   `dns/growhighstaffing.com.txt` is an export of the complete live zone (website + email), kept as a backup. To restore it, use **Cloudflare → DNS → Records → Import and Export → Import**. Each record's proxy setting comes from its `cf_tags` comment.
 
 5. **GitHub → Settings → Pages → Custom domain:** enter `growhighstaffing.com` and save. Once the DNS check passes and the certificate is issued (minutes to a few hours), tick **Enforce HTTPS**. `public/CNAME` already contains the domain.
 6. *(Optional)* Once HTTPS works, you can switch the records to **Proxied (orange cloud)** for Cloudflare's CDN. If you do, set **SSL/TLS → Overview → Full**. Do not use "Flexible": it causes redirect loops.
